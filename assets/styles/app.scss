@@ -1,33 +1,16 @@
-:root {
-    --wild-series-black: #131312;
-    --wild-series-white: #F5F5F5;
-    --wild-series-blue: #1e54b6;
-    --wild-series-yellow: #FCD205;
-    --wild-series-red: #e74c3b;
-    --wild-series-cream: #F5EFE0;
-  }
-
-  $dark: #131312;
-  $light: #F5F5F5;
-  $primary: #1e54b6;
-  $danger: #e74c3b;
-  $warning: #FCD205;
-
-//   $custom-colors: (
-//   "custom-color": var(--wild-series-blue)
-// );
-
-// body {
-//     background-color: lightgray;
-// }
 @import "~bootstrap/scss/bootstrap";
+@import "variables";
 
 .bg-main-wild-series {
-    background-color: var(--wild-series-black);
+    background-color: $dark;
 }
 
-.main-typo-color {
-    color: var(--wild-series-cream)
+.typo-color-light {
+    color: $creamy;
+}
+
+.typo-color-dark {
+    color: $dark;
 }
 
 // NAVBAR BOOTSTRAP STYLE START

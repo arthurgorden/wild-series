@@ -2,8 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="{{ asset('build/images/FaviconWildSeries(blue-bg).svg') }}">
+        <title>Wild Series - {% block title %}{% endblock %}</title>
+        <link rel="icon" href="{{ asset('build/images/FaviconWildSeriesBW(danger-bg).svg') }}">
         {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
@@ -14,9 +14,9 @@
         {% endblock %}
     </head>
 
-    <header>{% include "layouts/_navbar.html.twig" %}</header>
 
-    <body class="bg-main-wild-series main-typo-color">
+    <body class="bg-light typo-color-dark">
+    <header>{% include "layouts/_navbar.html.twig" %}</header>
         {% block body %}{% endblock %}
     </body>
 </html>

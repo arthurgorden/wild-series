@@ -16,9 +16,9 @@ import './bootstrap';
 
 // returns the final, public path to this file
 // path is relative to this file - e.g. assets/images/logo.png
-import logoPath from './images/WildSeriesMainLogo.svg';
+// import logoPath from './images/WildSeriesMainLogo.svg';
 
-let html = `<img src="${logoPath}" alt="Wild Series Main logo">`;
+// let html = `<img src="${logoPath}" alt="Wild Series Main logo">`;
 
 const $ = require('jquery');
 // this "modifies" the jquery module: adding behavior to it
