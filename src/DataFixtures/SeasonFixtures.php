@@ -3,22 +3,40 @@
 namespace App\DataFixtures;
 
 use App\Entity\Season;
+// use App\Repository\ProgramRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class SeasonFixtures extends Fixture implements DependentFixtureInterface
 {
+    // private ProgramRepository $programRepository;
+
+    // public function __construct(ProgramRepository $programRepository)
+    // {
+    //     $programRepository->findAll();
+    // }
+
     public function load(ObjectManager $manager): void
     {
-        for ($i = 1; $i <= 12; $i++) {  
-            $season = new Season();  
-            $season->setNumber($i);
-            $season->setYear(rand(1990, 2022));
-            $season->setDescription('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam vestibulum morbi blandit cursus risus at ultrices. Bibendum at varius vel pharetra vel turpis nunc eget.');
-            $season->setProgramId($this->getReference('program_La Symfony du Nouveau Monde'));
-            $manager->persist($season);
-            $this->addReference('season_' . $i, $season);
+        $faker = Factory::create();
+        // $programTitles = $this->programRepository->findAll();
+        // foreach ($programTitles as $programTitle) { 
+        // }
+
+        foreach (CategoryFixtures::CATEGORIES as $category) {
+            for ($index=1; $index <= 15; $index++) {
+                for ($i = 1; $i <= 5; $i++) {  
+                    $season = new Season();  
+                    $season->setNumber($i);
+                    $season->setYear($faker->year());
+                    $season->setDescription($faker->paragraphs(3, true));
+                    $season->setProgramId($this->getReference('category_' . $category . '_program_' . $index));
+                    $manager->persist($season);
+                    $this->addReference('category_' . $category . '_program_' . $index . 'season_' . $i, $season);
+                }
+            }
         }
         $manager->flush();
     }
