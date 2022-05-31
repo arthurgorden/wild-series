@@ -4,13 +4,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Episode;
+use App\Entity\Program;
+use App\Entity\Season;
 use App\Repository\ProgramRepository;
 use App\Repository\SeasonRepository;
 use App\Repository\EpisodeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\This;
 
 #[Route('/program', name: 'program_')]
 class ProgramController extends AbstractController
@@ -52,6 +57,8 @@ class ProgramController extends AbstractController
         $programId = $programRepository->findOneBy(['id' => $programId]);
         if (!$programId) {
             $noProgramFound = 'Aucune série correspondante';
+        } else {
+            $noProgramFound = '';
         }
 
         $seasonId = $seasonRepository->findOneBy(['id' => $seasonId]);
@@ -70,10 +77,25 @@ class ProgramController extends AbstractController
 
         return $this->render('program/season_show.html.twig', [
             'program' => $programId,
+            'noProgramFound' => $noProgramFound,
             'season' => $seasonId,
             'noSeasonFound' => $noSeasonFound,
             'episodes' => $episodes,
             'noEpisodeFound' => $noEpisodeFound,
+        ]);
+    }
+
+    #[Route('/{programId}/season/{seasonId}/episode/{episodeId}', methods: ['GET'], requirements: ['programId' =>'^\d+$', 'seasonId' =>'^\d+$', 'episodeId' =>'^\d+$'], name: 'episode_show')]
+    // Ne pas oublier le use Sensio\...\Entity
+    #[Entity('program', options: ['id' => 'programId'])]
+    #[Entity('season', options: ['id' => 'seasonId'])]
+    #[Entity('episode', options: ['id' => 'episodeId'])]
+    public function showEpisode(Program $program, Season $season, Episode $episode) : Response
+    {
+        return $this->render('program/episode_show.html.twig', [
+            'program' => $program,
+            'season' => $season,
+            'episode' => $episode,
         ]);
     }
 }
