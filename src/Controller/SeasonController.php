@@ -70,7 +70,6 @@ class SeasonController extends AbstractController
     #[Route('/{id}', name: 'app_season_delete', methods: ['POST'])]
     public function delete(Request $request, Season $season, SeasonRepository $seasonRepository, EpisodeRepository $episodeRepository): Response
     {
-        $season->getEpisodes();
         if ($this->isCsrfTokenValid('delete'.$season->getId(), $request->request->get('_token'))) {
             foreach ($season->getEpisodes() as $episode) {
                 $episodeRepository->remove($episode, true);
