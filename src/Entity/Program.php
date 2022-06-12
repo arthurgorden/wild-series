@@ -21,7 +21,7 @@ class Program
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message: 'Ce champ doit être complété')]
-    #[Assert\Length(max:15, maxMessage: 'Le titre saisi {{ value }} est trop long, il ne doit pas dépasser {{ limit }} caractères')]
+    #[Assert\Length(max:255, maxMessage: 'Le titre saisi {{ value }} est trop long, il ne doit pas dépasser {{ limit }} caractères')]
     private $title;
     
     #[ORM\Column(type: 'text')]
