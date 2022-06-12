@@ -6,8 +6,12 @@ use App\Repository\SeasonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
+#[UniqueEntity('number', message: 'Cette saison existe déjà')]
+#[Assert\EnableAutoMapping]
 class Season
 {
     #[ORM\Id]

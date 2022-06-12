@@ -4,8 +4,13 @@ namespace App\Entity;
 
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EpisodeRepository::class)]
+#[UniqueEntity('title', message: 'Ce titre d\'épisode ({{ value }}) existe déjà')]
+#[UniqueEntity('number', message: 'Ce numéro d\'épisode ({{ value }}) existe déjà')]
+#[Assert\EnableAutoMapping]
 class Episode
 {
     #[ORM\Id]
