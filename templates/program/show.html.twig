@@ -15,7 +15,8 @@
 	</div>
 
 	<div>
-		<h2>Détail des saisons : {{ noSeasonFound }}</h2>
+		<h2>Détail des saisons :
+			{{ noSeasonFound }}</h2>
 		<ul>
 			{% for season in seasons %}
 				<li>Saison
@@ -28,6 +29,18 @@
 			{% endfor %}
 		</ul>
 	</div>
+
+	<div>
+		<strong>Acteurs :</strong>
+		<ul>
+			{% for actor in program.actors %}
+				<li>{{ actor.name }}</li>
+			{% else %}
+				<li>Aucun acteur pour cette série</li>
+			{% endfor %}
+		</ul>
+	</div>
+
 
 	<a href="{{ path("category_show", { categoryName: program.category.name }) }}">Voir la catégorie</a>
 </br>

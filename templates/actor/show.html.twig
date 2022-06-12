@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acteur #{{ actor.id }}
+{% endblock %}
+
+{% block body %}
+	<h1 class="mt-0">{{ actor.name }}</h1>
+	<div>
+		<h2>Détail des séries :
+			{{ noProgramFound }}</h2>
+		{% for program in programs %}
+			<div class="media">
+				<img class="align-self-start mr-3" src="{{program.poster}}" alt="{{ program.title }} poster">
+				<div class="media-body">
+					<h1 class="mt-0">{{ program.title }}</h1>
+					<p>{{ program.synopsis }}</p>
+					<p>Catégorie :
+						{{ program.category.name }}</p>
+				</div>
+			</div>
+		{% endfor %}
+		{# <a href="{{ path("program_season_show", { programId: program.id, seasonId: season.id }) }}">Voir la liste des épisodes</a> #}
+	</div>
+
+	{# <a href="{{ path("category_show", { categoryName: program.category.name }) }}">Voir la catégorie</a> #}
+</br>
+<a href="{{ path('program_index') }}">
+	Retour à la liste des programmes
+</a>{% endblock %}
