@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
-#[UniqueEntity('number', message: 'Cette saison existe déjà')]
+// #[UniqueEntity('number', message: 'Cette saison existe déjà')] : BUG : empêche la création de saisons, même rattachée à une autre série
 #[Assert\EnableAutoMapping]
 class Season
 {

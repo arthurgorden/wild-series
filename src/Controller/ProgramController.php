@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Doctrine\Persistence\ManagerRegistry;
 use phpDocumentor\Reflection\Types\This;
 use Symfony\Component\HttpFoundation\Request;
+use App\Service\Slugify;
 
 #[Route('/program', name: 'program_')]
 class ProgramController extends AbstractController
@@ -32,12 +33,14 @@ class ProgramController extends AbstractController
     }
 
     #[Route('/new', 'new')]
-    public function new(Request $request, ProgramRepository $programRepository): Response
+    public function new(Request $request, ProgramRepository $programRepository, Slugify $slugify): Response
     {
         $program = new Program();
         $form = $this->createForm(ProgramType::class, $program);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $slug = $slugify->generate($program->getTitle());
+            $program->setSlug($slug);
             $programRepository->add($program, true);
             return $this->redirectToRoute('program_index');
         }
@@ -47,13 +50,13 @@ class ProgramController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', methods: ['GET'], requirements: ['id'=>'^\d+$'], name: 'show')]
-    public function show(int $id, ProgramRepository $programRepository, SeasonRepository $seasonRepository): Response
+    #[Route('/show/{slug}', methods: ['GET'], requirements: ['slug'=>'^[a-z0-9]+(?:-[a-z0-9]+)*$'], name: 'show')]
+    public function show(string $slug, ProgramRepository $programRepository, SeasonRepository $seasonRepository): Response
     {
-        $program = $programRepository->findOneBy(['id' => $id]);
+        $program = $programRepository->findOneBy(['slug' => $slug]);
         if (!$program) {
             throw $this->createNotFoundException(
-                'No program with id : '.$id.' found in program\'s table.'
+                'No program with title : '.$slug.' found in program\'s table.'
             );
         }
         $seasons = $seasonRepository->findBy(['program_id' => $program]);
@@ -69,11 +72,11 @@ class ProgramController extends AbstractController
         ]);
     }
 
-    #[Route('/{programId}/season/{seasonId}', methods: ['GET'], requirements: ['seasonId' =>'^\d+$'], name: 'season_show')]
-    public function showSeason(int $programId, int $seasonId, ProgramRepository $programRepository, SeasonRepository $seasonRepository, EpisodeRepository $episodeRepository)
+    #[Route('/{programSlug}/season/{seasonId}', methods: ['GET'], requirements: ['programSlug'=>'^[a-z0-9]+(?:-[a-z0-9]+)*$', 'seasonId' =>'^\d+$'], name: 'season_show')]
+    public function showSeason(string $programSlug, int $seasonId, ProgramRepository $programRepository, SeasonRepository $seasonRepository, EpisodeRepository $episodeRepository)
     {
-        $programId = $programRepository->findOneBy(['id' => $programId]);
-        if (!$programId) {
+        $programSlug = $programRepository->findOneBy(['slug' => $programSlug]);
+        if (!$programSlug) {
             $noProgramFound = 'Aucune série correspondante';
         } else {
             $noProgramFound = '';
@@ -94,7 +97,7 @@ class ProgramController extends AbstractController
         }
 
         return $this->render('program/season_show.html.twig', [
-            'program' => $programId,
+            'program' => $programSlug,
             'noProgramFound' => $noProgramFound,
             'season' => $seasonId,
             'noSeasonFound' => $noSeasonFound,
@@ -103,11 +106,11 @@ class ProgramController extends AbstractController
         ]);
     }
 
-    #[Route('/{programId}/season/{seasonId}/episode/{episodeId}', methods: ['GET'], requirements: ['programId' =>'^\d+$', 'seasonId' =>'^\d+$', 'episodeId' =>'^\d+$'], name: 'episode_show')]
+    #[Route('/{programSlug}/season/{seasonId}/episode/{episodeSlug}', methods: ['GET'], requirements: ['programSlug'=>'^[a-z0-9]+(?:-[a-z0-9]+)*$', 'seasonId' =>'^\d+$', 'episodeSlug'=>'^[a-z0-9]+(?:-[a-z0-9]+)*$'], name: 'episode_show')]
     // Ne pas oublier le use Sensio\...\Entity
-    #[Entity('program', options: ['id' => 'programId'])]
+    #[Entity('program', options: ['mapping' => ['programSlug' => 'slug']])]
     #[Entity('season', options: ['id' => 'seasonId'])]
-    #[Entity('episode', options: ['id' => 'episodeId'])]
+    #[Entity('episode', options: ['mapping' => ['episodeSlug' => 'slug']])]
     public function showEpisode(Program $program, Season $season, Episode $episode) : Response
     {
         return $this->render('program/episode_show.html.twig', [

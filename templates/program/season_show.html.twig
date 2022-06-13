@@ -26,18 +26,18 @@
 		<ul>
 			{% for episode in episodes %}
 				<li>Titre de l'épisode :
-					<a href="{{ path("program_episode_show", { programId: program.id, seasonId: season.id, episodeId: episode.id }) }}">{{ episode.title }}</a>
+					<a href="{{ path("program_episode_show", { programSlug: program.slug, seasonId: season.id, episodeSlug: episode.slug }) }}">{{ episode.title }}</a>
 					<p>Synopsis :
 						{{ episode.synopsis }}</p>
 					<p>
-						<a href="{{ path("program_episode_show", { programId: program.id, seasonId: season.id, episodeId: episode.id }) }}">Voir le détail de l'épisode</a>
+						<a href="{{ path("program_episode_show", { programSlug: program.slug, seasonId: season.id, episodeSlug: episode.slug }) }}">Voir le détail de l'épisode</a>
 					</p>
 				</li>
 			{% endfor %}
 		</ul>
 	</div>
 
-	<a href="{{ path("program_show", { id: program.id }) }}">Voir la fiche de {{ program.title }}</a></br>
+	<a href="{{ path("program_show", { slug: program.slug }) }}">Voir la fiche de {{ program.title }}</a></br>
 	<a href="{{ path("category_show", { categoryName: program.category.name }) }}">Voir la catégorie</a>
 </br>
 <a href="{{ path('program_index') }}">
